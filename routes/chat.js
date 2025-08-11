@@ -70,7 +70,7 @@ router.post("/chat", async (req, res) => {
   const { threadId, message } = req.body;
 
   if (!threadId || !message) {
-    res.status(400).json({ error: "missing required fields" });
+    return res.status(400).json({ error: "missing required fields" });
   }
 
   try {
@@ -89,11 +89,24 @@ router.post("/chat", async (req, res) => {
 
     const assistantReply = await getOpenAIAPIResponse(message);
 
-    thread.messages.push({ role: "assistant", content: assistantReply });
+    // thread.messages.push({ role: "assistant", content: assistantReply });
+    if (assistantReply && assistantReply.trim() !== "") {
+      thread.messages.push({ role: "assistant", content: assistantReply });
+    } else {
+      thread.messages.push({
+        role: "assistant",
+        content: "Sorry, I couldn't generate a response.",
+      });
+    }
+
     thread.updatedAt = new Date();
 
     await thread.save();
-    res.json({ reply: assistantReply });
+    res.json({
+      reply: assistantReply,
+      threadId: thread.threadId,
+      threadTitle: thread.title,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "something went wrong" });

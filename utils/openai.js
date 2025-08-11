@@ -5,10 +5,10 @@ const getOpenAIAPIResponse = async (message) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "gpt-4o-mini",
+      model: "mistralai/mistral-7b-instruct",
       messages: [
         {
           role: "user",
@@ -20,13 +20,18 @@ const getOpenAIAPIResponse = async (message) => {
 
   try {
     const response = await fetch(
-      "https://api.openai.com/v1/chat/completions",
+      "https://openrouter.ai/api/v1/chat/completions",
       options
     );
     const data = await response.json();
+    if (data.error) {
+      console.error("OpenRouter API error:", data.error);
+      return "Sorry, I couldn't process your request.";
+    }
     return data.choices[0].message.content; //reply
   } catch (err) {
-    console.log(err);
+    console.log("OpenAI API error:", err.message);
+    return "Sorry, I couldn't process your request.";
   }
 };
 
