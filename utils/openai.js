@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 const getOpenAIAPIResponse = async (messages) => {
+
   const options = {
     method: "POST",
     headers: {
