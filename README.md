@@ -58,4 +58,4 @@ The backend of the ChatGPT application is built with **Node.js** and **Express.j
 ### **Environment Variables:**
 
 - `OPENROUTER_API_KEY`: Used OpenRouter of Mistral 7B
-- `PORT`: The port the server will run on 500.
+- `PORT`: The port the server will run on 5000.
